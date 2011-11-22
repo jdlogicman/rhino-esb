@@ -282,5 +282,16 @@ namespace Rhino.ServiceBus.Autofac
                 .As<IElementSerializationBehavior>().SingleInstance();
             builder.Update(container);
         }
-    }
+
+
+		public void RegisterAmazonSQSTransport()
+		{
+			throw new NotImplementedException();
+		}
+
+		public void RegisterAmazonSQSOneWay()
+		{
+			throw new NotImplementedException();
+		}
+	}
 }
