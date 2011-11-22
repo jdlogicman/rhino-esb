@@ -19,5 +19,7 @@ namespace Rhino.ServiceBus.Config
         void RegisterRhinoQueuesOneWay();
         void RegisterSecurity(byte[] key);
         void RegisterNoSecurity();
-    }
+		void RegisterAmazonSQSTransport();
+		void RegisterAmazonSQSOneWay();
+	}
 }

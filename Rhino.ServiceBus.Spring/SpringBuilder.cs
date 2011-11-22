@@ -244,5 +244,16 @@ namespace Rhino.ServiceBus.Spring
             applicationContext.RegisterSingleton<IValueConvertor<WireEcryptedString>>(() => new ThrowingWireEcryptedStringConvertor());
             applicationContext.RegisterSingleton<IElementSerializationBehavior>(() => new ThrowingWireEncryptedMessageConvertor());
         }
-    }
+
+
+		public void RegisterAmazonSQSTransport()
+		{
+			throw new NotImplementedException();
+		}
+
+		public void RegisterAmazonSQSOneWay()
+		{
+			throw new NotImplementedException();
+		}
+	}
 }

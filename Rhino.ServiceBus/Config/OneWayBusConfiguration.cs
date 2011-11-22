@@ -16,6 +16,8 @@ namespace Rhino.ServiceBus.Config
             var messageOwnersReader = new MessageOwnersConfigReader(config.ConfigurationSection, messageOwners);
             messageOwnersReader.ReadMessageOwners();
             oneWayConfig.MessageOwners = messageOwners.ToArray();
+			// JED - TODO
+			// Bad coupling - extend or rewrite?
             if (IsRhinoQueues(messageOwnersReader.EndpointScheme))
             {
                 builder.RegisterRhinoQueuesOneWay();

@@ -19,6 +19,7 @@ using Rhino.ServiceBus.MessageModules;
 using Rhino.ServiceBus.Msmq;
 using Rhino.ServiceBus.Msmq.TransportActions;
 using Rhino.ServiceBus.RhinoQueues;
+using Rhino.ServiceBus.AmazonSQS;
 using ErrorAction = Rhino.ServiceBus.Msmq.TransportActions.ErrorAction;
 using IStartable = Rhino.ServiceBus.Internal.IStartable;
 using LoadBalancerConfiguration = Rhino.ServiceBus.LoadBalancer.LoadBalancerConfiguration;
@@ -252,7 +253,7 @@ namespace Rhino.ServiceBus.Castle
                        .DependsOn(new { messageOwners = oneWayConfig.MessageOwners }));
         }
 
-        public void RegisterRhinoQueuesTransport()
+		public void RegisterRhinoQueuesTransport()
         {
             var busConfig = config.ConfigurationSection.Bus;
             container.Register(
@@ -337,5 +338,35 @@ namespace Rhino.ServiceBus.Castle
                     .ImplementedBy<ThrowingWireEncryptedMessageConvertor>()
                 );
         }
-    }
+
+
+		// JED - TODO:
+		// These methods are called from the code that processes the config (IConfigurationAware)
+		// So, the builder interface needs to know about all supported transports
+		// Extend or rewrite?
+		public void RegisterAmazonSQSTransport()
+		{
+			throw new NotImplementedException();
+		}
+
+		public void RegisterAmazonSQSOneWay()
+		{
+            var oneWayConfig = (OnewaySQSServiceBusConfiguration) config;
+            var busConfig = config.ConfigurationSection.Bus;
+            container.Register(
+                     Component.For<IMessageBuilder<MessagePayload>>()
+                        .ImplementedBy<SQSMessageBuilder>()
+                        .LifeStyle.Is(LifestyleType.Singleton),
+                    Component.For<IOnewayBus>()
+                        .LifeStyle.Is(LifestyleType.Singleton)
+                        .ImplementedBy<SQSOneWayBus>()
+                        .DependsOn(new
+                        {
+                            messageOwners = oneWayConfig.MessageOwners.ToArray(),
+                            path = busConfig.QueuePath,
+                            enablePerformanceCounters = busConfig.EnablePerformanceCounters
+                        })
+                    );
+		}
+	}
 }

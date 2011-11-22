@@ -296,5 +296,16 @@ namespace Rhino.ServiceBus.Unity
             container.RegisterType<IElementSerializationBehavior, ThrowingWireEncryptedMessageConvertor>(
                 new ContainerControlledLifetimeManager());
         }
-    }
+
+
+		public void RegisterAmazonSQSTransport()
+		{
+			throw new NotImplementedException();
+		}
+
+		public void RegisterAmazonSQSOneWay()
+		{
+			throw new NotImplementedException();
+		}
+	}
 }

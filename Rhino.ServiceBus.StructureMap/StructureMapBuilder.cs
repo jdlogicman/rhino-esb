@@ -239,5 +239,16 @@ namespace Rhino.ServiceBus.StructureMap
                 c.For<IElementSerializationBehavior>().Singleton().Use<ThrowingWireEncryptedMessageConvertor>();
             });
         }
-    }
+
+
+		public void RegisterAmazonSQSTransport()
+		{
+			throw new NotImplementedException();
+		}
+
+		public void RegisterAmazonSQSOneWay()
+		{
+			throw new NotImplementedException();
+		}
+	}
 }

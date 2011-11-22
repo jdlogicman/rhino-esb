@@ -75,6 +75,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AmazonSQS\ConfigurationAware.cs" />
+    <Compile Include="AmazonSQS\MessageBuilder.cs" />
+    <Compile Include="AmazonSQS\OneWayBus.cs" />
+    <Compile Include="AmazonSQS\SubscriptionStorage.cs" />
+    <Compile Include="AmazonSQS\Transport.cs" />
     <Compile Include="Config\BusConfigurationSection.cs" />
     <Compile Include="Config\BusElement.cs" />
     <Compile Include="Config\ConsumerInterceptor.cs" />
