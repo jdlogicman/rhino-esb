@@ -10,7 +10,7 @@ namespace Rhino.ServiceBus.AmazonSQS
 	public class SQSOneWayBus : SQSTransport, IOnewayBus
 	{
 		private MessageOwnersSelector messageOwners;
-		public SQSOneWayBus(MessageOwner[] messageOwners, IMessageSerializer messageSerializer, string path, bool enablePerformanceCounters, IMessageBuilder<MessagePayload> messageBuilder)
+		public SQSOneWayBus(MessageOwner[] messageOwners)
 		{
 			this.messageOwners = new MessageOwnersSelector(messageOwners, new EndpointRouter());
 			(this as ITransport).Start();

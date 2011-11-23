@@ -371,12 +371,12 @@ namespace Rhino.ServiceBus.Castle
 		{
             var oneWayConfig = (OnewayRhinoServiceBusConfiguration)config;
             container.Register(
-                   Component.For<IMessageBuilder<Message>>()
+                   Component.For<IMessageBuilder<MessagePayload>>()
                        .LifeStyle.Is(LifestyleType.Singleton)
-                       .ImplementedBy<MsmqMessageBuilder>(),
+					   .ImplementedBy<SQSMessageBuilder>(),
                    Component.For<IOnewayBus>()
                        .LifeStyle.Is(LifestyleType.Singleton)
-                       .ImplementedBy<MsmqOnewayBus>()
+                       .ImplementedBy<SQSOneWayBus>()
                        .DependsOn(new { messageOwners = oneWayConfig.MessageOwners }));
         }
     }

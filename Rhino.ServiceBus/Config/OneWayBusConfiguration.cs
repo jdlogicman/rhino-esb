@@ -18,19 +18,36 @@ namespace Rhino.ServiceBus.Config
             oneWayConfig.MessageOwners = messageOwners.ToArray();
 			// JED - TODO
 			// Bad coupling - extend or rewrite?
-            if (IsRhinoQueues(messageOwnersReader.EndpointScheme))
+			var scheme = messageOwnersReader.EndpointScheme;
+            if (IsRhinoQueues(scheme))
             {
                 builder.RegisterRhinoQueuesOneWay();
             }
-            else
+            else if (IsMsmq(scheme))
             {
                 builder.RegisterMsmqOneWay();
             }
+			else if (IsAmazonSQS(scheme))
+			{
+				builder.RegisterAmazonSQSOneWay();
+			}
+			else
+			{
+				throw new ApplicationException(string.Format("Unknown endpoint scheme '{0}'", scheme));
+			}
         }
 
         private static bool IsRhinoQueues(string endpointScheme)
         {
             return endpointScheme.Equals("rhino.queues", StringComparison.InvariantCultureIgnoreCase);
         }
+		private static bool IsAmazonSQS(string endpointScheme)
+		{
+			return endpointScheme.Equals("amazon.sqs", StringComparison.InvariantCultureIgnoreCase);
+		}
+		private static bool IsMsmq(string endpointScheme)
+		{
+			return endpointScheme.Equals("msmq", StringComparison.InvariantCultureIgnoreCase);
+		}
     }
 }

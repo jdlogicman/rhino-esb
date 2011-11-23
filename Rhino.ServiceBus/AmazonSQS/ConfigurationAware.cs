@@ -18,10 +18,6 @@ namespace Rhino.ServiceBus.Config
 
 			var busConfigSection = configuration.ConfigurationSection.Bus;
 
-			if (string.IsNullOrEmpty(busConfigSection.Name))
-				throw new ConfigurationErrorsException(
-					"Could not find attribute 'name' in node 'bus' in configuration");
-
 			builder.RegisterAmazonSQSTransport();
 		}
 	}
