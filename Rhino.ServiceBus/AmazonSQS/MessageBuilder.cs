@@ -31,7 +31,8 @@ namespace Rhino.ServiceBus.AmazonSQS
 			{
 				messageSerializer.Serialize(msgs, memoryStream);
 				data = memoryStream.ToArray();
-
+                // JED - TODO
+                // encode in valid characters
 			}
 			var payload = new MessagePayload
 			{
@@ -44,23 +45,15 @@ namespace Rhino.ServiceBus.AmazonSQS
                         }
 			};
 
-			TryCustomizeHeaders(payload.Headers);
-
-			var copy = MessageBuilt;
+            // JED - TODO
+            // throw if over max size for SQS
+        	var copy = MessageBuilt;
 			if (copy != null)
 				copy(payload);
 
 			return payload;
 		}
 
-		private void TryCustomizeHeaders(NameValueCollection headers)
-		{
-			if (MessageHeaders == null)
-				return;
-			MessageHeaders.Customize(headers);
-		}
-
-		public ICustomizeMessageHeaders MessageHeaders { get; set; }
 		public void Initialize(Endpoint source)
 		{
 			endpoint = source;

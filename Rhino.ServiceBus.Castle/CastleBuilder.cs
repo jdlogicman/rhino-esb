@@ -346,27 +346,38 @@ namespace Rhino.ServiceBus.Castle
 		// Extend or rewrite?
 		public void RegisterAmazonSQSTransport()
 		{
-			throw new NotImplementedException();
-		}
-
-		public void RegisterAmazonSQSOneWay()
-		{
-            var oneWayConfig = (OnewaySQSServiceBusConfiguration) config;
             var busConfig = config.ConfigurationSection.Bus;
             container.Register(
-                     Component.For<IMessageBuilder<MessagePayload>>()
-                        .ImplementedBy<SQSMessageBuilder>()
-                        .LifeStyle.Is(LifestyleType.Singleton),
-                    Component.For<IOnewayBus>()
-                        .LifeStyle.Is(LifestyleType.Singleton)
-                        .ImplementedBy<SQSOneWayBus>()
-                        .DependsOn(new
-                        {
-                            messageOwners = oneWayConfig.MessageOwners.ToArray(),
-                            path = busConfig.QueuePath,
-                            enablePerformanceCounters = busConfig.EnablePerformanceCounters
-                        })
-                    );
-		}
-	}
+                Component.For<ISubscriptionStorage>()
+                    .LifeStyle.Is(LifestyleType.Singleton)
+                    .ImplementedBy(typeof(SQSSubscriptionStorage)),
+                Component.For<ITransport>()
+                    .LifeStyle.Is(LifestyleType.Singleton)
+                    .ImplementedBy(typeof(SQSTransport))
+                    .DependsOn(new
+                    {
+                        threadCount = config.ThreadCount,
+                        endpoint = config.Endpoint,
+                        queueIsolationLevel = config.IsolationLevel,
+                        numberOfRetries = config.NumberOfRetries,
+                        path = busConfig.QueuePath
+                    }),
+                Component.For<IMessageBuilder<MessagePayload>>()
+                    .ImplementedBy<SQSMessageBuilder>()
+                    .LifeStyle.Is(LifestyleType.Singleton)
+                );
+        }
+		public void RegisterAmazonSQSOneWay()
+		{
+            var oneWayConfig = (OnewayRhinoServiceBusConfiguration)config;
+            container.Register(
+                   Component.For<IMessageBuilder<Message>>()
+                       .LifeStyle.Is(LifestyleType.Singleton)
+                       .ImplementedBy<MsmqMessageBuilder>(),
+                   Component.For<IOnewayBus>()
+                       .LifeStyle.Is(LifestyleType.Singleton)
+                       .ImplementedBy<MsmqOnewayBus>()
+                       .DependsOn(new { messageOwners = oneWayConfig.MessageOwners }));
+        }
+    }
 }
