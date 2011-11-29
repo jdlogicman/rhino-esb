@@ -348,7 +348,7 @@ namespace Rhino.ServiceBus.Castle
 		{
             var busConfig = config.ConfigurationSection.Bus;
             container.Register(
-                Component.For<ISubscriptionStorage>()
+				Component.For<ISubscriptionStorage>()
                     .LifeStyle.Is(LifestyleType.Singleton)
                     .ImplementedBy(typeof(SQSSubscriptionStorage)),
                 Component.For<ITransport>()
@@ -356,11 +356,9 @@ namespace Rhino.ServiceBus.Castle
                     .ImplementedBy(typeof(SQSTransport))
                     .DependsOn(new
                     {
-                        threadCount = config.ThreadCount,
+						threadCount = config.ThreadCount,
                         endpoint = config.Endpoint,
-                        queueIsolationLevel = config.IsolationLevel,
-                        numberOfRetries = config.NumberOfRetries,
-                        path = busConfig.QueuePath
+                        numberOfRetries = config.NumberOfRetries
                     }),
                 Component.For<IMessageBuilder<MessagePayload>>()
                     .ImplementedBy<SQSMessageBuilder>()
@@ -377,7 +375,13 @@ namespace Rhino.ServiceBus.Castle
                    Component.For<IOnewayBus>()
                        .LifeStyle.Is(LifestyleType.Singleton)
                        .ImplementedBy<SQSOneWayBus>()
-                       .DependsOn(new { messageOwners = oneWayConfig.MessageOwners }));
+					   .DependsOn(new
+					   {
+						   messageOwners = oneWayConfig.MessageOwners,
+						   threadCount = config.ThreadCount,
+						   endpoint = config.Endpoint,
+						   numberOfRetries = config.NumberOfRetries
+					   }));
         }
     }
 }
